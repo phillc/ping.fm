@@ -17,14 +17,23 @@ require 'rest_client'
 # * more awesomeness....
 #
 # 
-class PingFM
+module PingFM
   
-  API_KEY = "YOUR API KEY"
-  USER_API_KEY = "YOUR USER API KEY"
-  
-  def self.user_post(post_method, body, opts = {})
-    params = {:api_key => API_KEY, 
-              :user_app_key => USER_API_KEY, 
+  class << self
+  def load_configuration
+    config_file = PING_FM_CONFIG || "#{RAILS_ROOT}/config/ping_fm.yml"
+    return false unless File.exist?(ping_fm_config)
+    configuration = YAML.load(ERB.new(File.read(@ping_fm_config_file)).result)
+    if defined? RAILS_ENV
+      configuration[RAILS_ENV]
+    end
+    @api_key = configuration['api_key']
+    @user_api_key = configuration['user_api_key']
+  end 
+
+  def user_post(post_method, body, opts = {})
+    params = {:api_key => @api_key, 
+              :user_app_key => @user_api_key, 
               :post_method => post_method,
               :body => body}.merge(opts)
     xml_result = RestClient.post("http://api.ping.fm/v1/user.post", params)
