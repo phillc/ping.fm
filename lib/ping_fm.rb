@@ -1,4 +1,4 @@
-require 'rest_client'
+#require 'rest_client'
 
 # Simple library to automate posting to ping.FM service.
 # 
@@ -18,25 +18,28 @@ require 'rest_client'
 #
 # 
 module PingFM
-  
   class << self
-  def load_configuration
-    config_file = PING_FM_CONFIG || "#{RAILS_ROOT}/config/ping_fm.yml"
-    return false unless File.exist?(ping_fm_config)
-    configuration = YAML.load(ERB.new(File.read(@ping_fm_config_file)).result)
-    if defined? RAILS_ENV
-      configuration[RAILS_ENV]
-    end
-    @api_key = configuration['api_key']
-    @user_api_key = configuration['user_api_key']
-  end 
+    def load_config
+      config_file = "#{RAILS_ROOT}/config/ping_fm.yml"
+      return false unless File.exist?(config_file)
+      configuration = YAML.load(ERB.new(File.read(config_file)).result)
+      configuration = configuration[RAILS_ENV] if defined? RAILS_ENV
+      {
+        :api_key => configuration['api_key'],
+        :user_api_key => configuration['user_api_key']
+      }
+    end 
 
-  def user_post(post_method, body, opts = {})
-    params = {:api_key => @api_key, 
-              :user_app_key => @user_api_key, 
-              :post_method => post_method,
-              :body => body}.merge(opts)
-    xml_result = RestClient.post("http://api.ping.fm/v1/user.post", params)
+    def config
+      @config ||= load_config
+    end
+
+    def user_post(post_method, body, opts = {})
+      params = {:api_key => config[:api_key], 
+                :user_app_key => config[:user_api_key],
+                :post_method => post_method,
+                :body => body}.merge(opts)
+      xml_result = RestClient.post("http://api.ping.fm/v1/user.post", params)
+    end
   end
-  
 end

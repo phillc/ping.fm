@@ -5,6 +5,11 @@ This is a simple library to automate posting to ping.FM service.
 Uses the v1 API:
 http://groups.google.com/group/pingfm-developers/web/api-documentation?_done=%2Fgroup%2Fpingfm-developers%3F
 
+Dependencies:
+gem: rest_client - http://github.com/adamwiggins/rest-client
+
+      config.gem 'adamwiggins-rest-client', :lib => 'rest_client', :source => 'http://gems.github.com'
+
 Sample Usage:
 
   require 'ping_fm'
