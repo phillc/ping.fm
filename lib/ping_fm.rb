@@ -26,7 +26,7 @@ module PingFM
       configuration = configuration[RAILS_ENV] if defined? RAILS_ENV
       {
         :api_key => configuration['api_key'],
-        :user_api_key => configuration['user_api_key']
+        :user_app_key => configuration['user_app_key']
       }
     end 
 
@@ -36,9 +36,10 @@ module PingFM
 
     def user_post(post_method, body, opts = {})
       params = {:api_key => config[:api_key], 
-                :user_app_key => config[:user_api_key],
+                :user_app_key => config[:user_app_key],
                 :post_method => post_method,
                 :body => body}.merge(opts)
+      puts params.inspect
       xml_result = RestClient.post("http://api.ping.fm/v1/user.post", params)
     end
   end

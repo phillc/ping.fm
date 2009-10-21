@@ -12,12 +12,23 @@ gem: rest_client - http://github.com/adamwiggins/rest-client
 
 Sample Usage:
 
-  require 'ping_fm'
-  PingFM.user_post("status", "hey guys! I'm posting to ping.FM!")
+in config/ping_fm.yml
+
+    development:
+      api_key: ........
+      user_app_key: ........
+    production:
+      api_key: ........
+      user_app_key: ........
+
+
+elsewhere:
+
+    PingFM.user_post("status", "hey guys! I'm posting to ping.FM!")
 
 You can also pass additional options:
 
-  PingFM.user_post("status", "hey guys! I'm posting to ping.FM!", :tags => "fun, times", :mood => "emo-happy")
+    PingFM.user_post("status", "hey guys! I'm posting to ping.FM!", :tags => "fun, times", :mood => "emo-happy")
 
 See the v1 API from ping.FM for more details.
 
